@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AccountService {
   baseUrl = environment.apiUrl;
-  
+
   private currentUserSource = new ReplaySubject<User>(1);
   currentUser$ = this.currentUserSource.asObservable();
   constructor(private http: HttpClient) { }
@@ -19,8 +19,7 @@ export class AccountService {
       map((response: User) => {
         const user = response;
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUserSource(user);
         }
       })
     )
@@ -31,15 +30,14 @@ export class AccountService {
       map((response: User) => {
         const user = response;
         if (user) {
-          localStorage.setItem('user', JSON.stringify(user));
-          this.currentUserSource.next(user);
+          this.setCurrentUserSource(user);
         }
       })
     )
   }
 
   setCurrentUserSource(user: User) {
-    console.log('setCurrentUserSource');
+    localStorage.setItem('user',JSON.stringify(user));
     this.currentUserSource.next(user);
   }
 
